@@ -1,0 +1,45 @@
+---
+import { Cover } from '@components/ui'
+
+const {
+	alt,
+	class: classes,
+	id,
+	src,
+	'data-animation': animation,
+	showSeparatorTop = false,
+	showSeparatorBottom = true,
+	...attrs
+} = Astro.props
+
+const heroId = id || 'hero'
+---
+
+<style lang='scss'>
+	.hero {
+		place-content: center;
+		text-align: center;
+	}
+</style>
+
+<style is:global lang='scss'>
+	.hero .content {
+		padding-block: var(--hero-padding);
+	}
+</style>
+
+<Cover
+	alt={alt}
+	class:list={['hero', 'dark', 'columns-edge', classes]}
+	id={heroId}
+	src={src}
+	data-motion={animation ?? 'scale-in-up-right'}
+	data-motion-stagger
+	showSeparatorTop={showSeparatorTop}
+	showSeparatorBottom={showSeparatorBottom}
+	{...attrs}
+>
+	<slot />
+	<slot name='before-content' slot='before-content' />
+	<slot name='after-content' slot='after-content' />
+</Cover>

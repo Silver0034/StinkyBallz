@@ -1,0 +1,6 @@
+export { default as Button } from './Button'
+export { default as Cover } from './Cover.astro'
+export { default as Hero } from './Hero'
+export { default as Separator } from './Separator.astro'
+export { default as SkipLink } from './SkipLink.astro'
+export { default as Partners } from './Partners'

@@ -1,0 +1,80 @@
+---
+import { SEO } from 'astro-seo'
+import { SkipLink } from '@components/ui'
+import '@styles/index.scss'
+
+const descriptionMinLength = 60,
+	descriptionMaxLength = 120,
+	titleSeparator = ' | '
+
+const {
+	canonical,
+	charset = 'UTF-8',
+	class: classes,
+	description,
+	extend,
+	language = 'en_US',
+	nofollow,
+	noindex,
+	openGraph,
+	title,
+	twitter
+} = Astro.props
+
+// Stop if page does not have a title or description
+if (!title || !description) {
+	throw new Error('Title and description are required')
+}
+
+// Stop if description is too short or too long
+if (
+	description.length < descriptionMinLength ||
+	description.length > descriptionMaxLength
+) {
+	throw new Error(
+		`Description must be between ${descriptionMinLength} and ${descriptionMaxLength} characters. Currently is ${description.length} characters`
+	)
+}
+---
+
+<html lang={language}>
+	<head>
+		<slot name='head-start' />
+
+		<meta name='viewport' content='width=device-width, initial-scale=1' />
+
+		<SEO
+			canonical={canonical}
+			charset={charset}
+			description={description}
+			extend={extend}
+			nofollow={nofollow}
+			noindex={noindex}
+			openGraph={openGraph}
+			title={title}
+			titleTemplate=`%s${titleSeparator}${SITE_NAME}`
+			twitter={twitter}
+		/>
+
+		<slot name='head' />
+
+		<slot name='head-end' />
+	</head>
+
+	<body class:list={[classes]}>
+		<slot name='body-start' />
+
+		<SkipLink href='#content' text='Skip to content' />
+
+		<slot name='header' />
+		<slot name='content-before' />
+		<main id='content'>
+			<slot name='content-start' />
+			<slot />
+			<slot name='content-end' />
+		</main>
+		<slot name='content-after' />
+		<slot name='footer' />
+		<slot name='body-end' />
+	</body>
+</html>

@@ -1,0 +1,84 @@
+---
+const imageHeight = 48
+const imageWidth = 150
+const numberOfDuplicatesInCarousel = 3
+
+import { getCollection } from 'astro:content'
+import { Picture } from 'astro:assets'
+import type { CollectionEntry } from 'astro:content'
+
+const images = (await getCollection(
+	'partners'
+)) as CollectionEntry<'partners'>[]
+
+const screenReaderText = images
+	.map(({ data }) => {
+		return data.name
+	})
+	.join(', ')
+---
+
+<style lang='scss'>
+	#partners {
+		display: block;
+		padding-inline: 0;
+		padding-block: calc(var(--padding-block) / 2);
+		overflow: hidden;
+
+		.logos {
+			display: flex;
+			padding: 2rem 0;
+			gap: var(--global-gap);
+			width: max-content;
+			white-space: nowrap;
+			animation: carousel 45s linear infinite;
+
+			img {
+				object-fit: contain;
+			}
+
+			@keyframes carousel {
+				0% {
+					transform: translateX(0);
+				}
+				100% {
+					transform: translateX(
+						calc(calc(-100% / 3) - calc(var(--global-gap) / 3))
+					);
+				}
+			}
+		}
+	}
+</style>
+
+<section id='partners' data-motion='up'>
+	<slot />
+
+	<slot name='logos'>
+		<p class='screen-reader-text'>{screenReaderText}</p>
+
+		<div class='logos'>
+			{
+				Array(numberOfDuplicatesInCarousel)
+					.fill(null)
+					.map((_) => {
+						return images.map(({ data }) => {
+							const { image, name } = data
+							return (
+								<Picture
+									src={image}
+									alt={name}
+									width={imageWidth}
+									height={imageHeight}
+									formats={['avif', 'webp', 'jpg']}
+									widths={[150]}
+									loading='lazy'
+									inert
+								/>
+							)
+						})
+					})
+			}
+		</div>
+	</slot>
+</section>

@@ -1,0 +1,161 @@
+---
+import { Icon } from 'astro-icon/components'
+
+type ButtonProps = {
+	background: boolean
+	class: string
+	href: string
+	icon: string
+	id: string
+	target: string
+	text: string
+	title: string
+	variant: string
+}
+
+const {
+	class: passedClasses,
+	href,
+	icon,
+	target,
+	text,
+	title,
+	variant,
+	...attrs
+} = Astro.props as ButtonProps
+
+// require either text, or title. Stop if neither is provided
+if (!text && !title) throw new Error('Text or title is required')
+
+const classes = ['button', passedClasses]
+
+const Tag = href ? 'a' : 'button'
+
+// Check if the link is internal
+const isInternal =
+	href &&
+	(href.includes(ORIGIN) || href.startsWith('/') || href.startsWith('#'))
+
+// Set the title to equal text if the title is not set
+let buttonTitle = title || text
+
+// Set default for target if not set
+let buttonTarget = target
+if (href && !target) buttonTarget = isInternal ? '_self' : '_blank'
+
+if (target === '_blank') {
+	switch (true) {
+		case href.includes('mailto:'):
+			buttonTitle += ' (Open your email client)'
+			break
+		case href.includes('tel:'):
+			buttonTitle += ' (Open your phone app)'
+			break
+		default:
+			buttonTitle += ' (Opens in a new tab)'
+			break
+	}
+}
+---
+
+<style lang='scss'>
+	@use 'sass:map';
+	@use '@styles/colors';
+
+	$primaryColor: colors.get('primary');
+	$accentColor: colors.get('accent');
+	$foregroundColor: colors.get('primary', 'foreground');
+
+	// Button component
+	.button {
+		&[data-variant='accent'] {
+			--button-color-background: #{$accentColor};
+			--button-color-background-active: #{$primaryColor};
+			--button-color-border: #{$accentColor};
+			--button-color-border-active: #{$primaryColor};
+		}
+
+		&[data-variant='outline'] {
+			--button-color-background: transparent;
+			--button-color-foreground: #{$foregroundColor};
+			--button-color-border: #{$foregroundColor};
+			--button-color-border-active: #{$primaryColor};
+		}
+	}
+
+	.button {
+		position: relative;
+		display: inline-flex;
+		gap: 1ch;
+		align-items: center;
+		padding-inline: var(--button-padding);
+		padding-block: calc(var(--button-padding) * 0.75);
+		margin-inline: var(--button-margin);
+		margin-block: var(--button-margin);
+		color: var(--button-color-foreground);
+		background-color: transparent;
+		text-decoration: none;
+		cursor: pointer;
+		border: 0.1em solid var(--button-color-border);
+		border-radius: var(--button-border-radius);
+		overflow: hidden;
+
+		&::before,
+		&::after {
+			content: '';
+			position: absolute;
+			inset: 0;
+		}
+
+		&::before {
+			background-color: var(--button-color-background);
+			z-index: -2;
+		}
+
+		&::after {
+			transform: translateX(-150%);
+			transition: transform 0.3s;
+			background-color: var(--button-color-background-active);
+			z-index: -1;
+		}
+
+		&:hover,
+		&:focus,
+		&:active {
+			color: var(--button-color-foreground-active);
+			&::after {
+				transform: translateX(0);
+			}
+		}
+	}
+</style>
+
+<slot name='before' />
+<Tag
+	class:list={classes}
+	href={href}
+	target={buttonTarget}
+	title={buttonTitle}
+	aria-label={buttonTitle}
+	data-variant={variant}
+	{...attrs}
+>
+	<slot name='start' />
+
+	<slot name='text'>
+		{
+			text && (
+				<span>
+					<slot name='before-text' />
+					{text}
+					<slot name='after-text' />
+				</span>
+			)
+		}
+	</slot>
+	<slot name='icon'>
+		{icon && <Icon name={icon} />}
+	</slot>
+	<slot name='end' />
+</Tag>
+<slot name='after' />

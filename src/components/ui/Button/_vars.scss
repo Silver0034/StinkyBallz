@@ -1,0 +1,20 @@
+@use '@styles/colors';
+
+:root {
+	$primaryColor: colors.get('primary');
+	$accentColor: colors.get('accent');
+	$foregroundColor: colors.get('primary', 'foreground');
+	$buttonDynamic: colors.dynamic(var(--button-color-background));
+
+	--button-border-radius: var(--global-radius);
+	--button-color-background: #{$primaryColor};
+	--button-color-background-active: #{$accentColor};
+	--button-color-foreground: #{$buttonDynamic};
+	--button-color-foreground-active: #{colors.dynamic(
+			var(--button-color-background-active)
+		)};
+	--button-color-border: #{$primaryColor};
+	--button-color-border-active: #{$accentColor};
+	--button-margin: 1em;
+	--button-padding: 1em;
+}

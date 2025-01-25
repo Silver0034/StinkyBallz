@@ -1,0 +1,97 @@
+---
+import { Picture } from 'astro:assets'
+import { Separator } from '@components/ui'
+
+const {
+	class: classes,
+	src,
+	alt,
+	'data-motion-background': backgroundAnimation,
+	showSeparatorTop = true,
+	showSeparatorBottom = true,
+	...attrs
+} = Astro.props
+
+const defaultAnimation = 'scale-out'
+const hasContent = (await Astro.slots.render('default')).length > 0
+---
+
+<style lang='scss'>
+	@use '@styles/colors';
+
+	.cover {
+		position: relative;
+		display: grid;
+		grid-template-columns: subgrid;
+		padding: 0;
+
+		.separator {
+			width: 100%;
+		}
+
+		&::after {
+			content: '';
+			position: absolute;
+			inset: 0;
+			background-color: colors.get('primary', 'background');
+			z-index: -1;
+			opacity: 0.75;
+		}
+
+		&:has(.cover-background)::after {
+			opacity: 0.5;
+		}
+	}
+
+	picture:has(.cover-background) {
+		position: absolute;
+		inset: 0;
+		overflow: hidden;
+		z-index: -1;
+	}
+
+	.cover-background {
+		position: absolute;
+		inset: 0;
+		height: 100%;
+		object-fit: cover;
+		object-position: center;
+		z-index: -1;
+	}
+
+	.content {
+		display: flex;
+		flex-wrap: wrap;
+		z-index: 0;
+		justify-content: space-around;
+		padding-block: var(--global-gap);
+		gap: var(--global-gap);
+	}
+</style>
+
+<section class:list={['cover', 'subgrid', classes]} {...attrs}>
+	<slot name='separator-top'
+		>{showSeparatorTop && <Separator position='top' />}</slot
+	>
+	<slot name='before-content' />
+	{
+		hasContent && (
+			<div class='content columns-full'>
+				<slot />
+			</div>
+		)
+	}
+	<slot name='after-content' />
+	{
+		src && (
+			<Picture
+				src={src}
+				alt={alt}
+				data-motion={backgroundAnimation ?? defaultAnimation}
+				data-motion-duration='3'
+				class='cover-background'
+			/>
+		)
+	}
+	<slot name='separator-bottom'>{showSeparatorBottom && <Separator />}</slot>
+</section>

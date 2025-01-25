@@ -1,0 +1,100 @@
+@use 'sass:math';
+@use 'mixins';
+
+$max-width: 800px;
+$column-count: 12;
+$gutter-count: 2;
+$gutter-min: 2rem;
+
+$fraction-map: (
+	edge: 1,
+	full: $column-count,
+	half: 2,
+	third: 3,
+	quarter: 4,
+	fifth: 5,
+	sixth: 6
+);
+
+body {
+	--column-count: #{$column-count};
+	--gutter-count: #{$gutter-count};
+	--gutter-min: #{$gutter-min};
+	--max-width: #{$max-width};
+
+	// Calculate the gutter width
+	--gutter: minmax(
+		#{$gutter-min},
+		calc((100% - #{$max-width}) / #{$gutter-count})
+	);
+
+	--base-grid-columns: var(--gutter) repeat(#{$column-count}, 1fr)
+		var(--gutter);
+
+	display: grid;
+	grid-template-columns: var(--base-grid-columns);
+
+	> * {
+		grid-column: 1 / -1;
+	}
+
+	> main {
+		display: grid;
+		grid-template-columns: subgrid;
+
+		> * {
+			grid-column: 2 / -2;
+		}
+	}
+}
+
+@each $fraction, $divisor in $fraction-map {
+	.columns-#{$fraction} {
+		@if $fraction == edge {
+			grid-column: 1 / -1;
+		} @else if $fraction == full {
+			grid-column: 2 / -2;
+		} @else {
+			grid-column: span math.div(#{$column-count}, $divisor);
+		}
+	}
+}
+
+@include mixins.breakpoint('tablet') {
+	@each $fraction, $divisor in $fraction-map {
+		.columns-tablet-#{$fraction} {
+			@if $fraction == edge {
+				grid-column: 1 / -1;
+			} @else if $fraction == full {
+				grid-column: 2 / -2;
+			} @else {
+				grid-column: span math.div(#{$column-count}, $divisor);
+			}
+		}
+	}
+}
+
+@include mixins.breakpoint('mobile') {
+	@each $fraction, $divisor in $fraction-map {
+		.columns-mobile-#{$fraction} {
+			@if $fraction == edge {
+				grid-column: 1 / -1;
+			} @else if $fraction == full {
+				grid-column: 2 / -2;
+			} @else {
+				grid-column: span math.div(#{$column-count}, $divisor);
+			}
+		}
+	}
+}
+
+.columns-auto {
+	grid-column: 1 / -1;
+}
+@include mixins.breakpoint('tablet', 'desktop') {
+	@for $i from 1 through $column-count {
+		*:has(> .columns-auto:nth-child(#{$i}n)) .columns-auto {
+			grid-column: span $i;
+		}
+	}
+}

@@ -1,0 +1,149 @@
+@use 'sass:map';
+@use '@styles/colors';
+
+$_breakpoints: (
+	tiny: (
+		min: null,
+		max: 250px
+	),
+	small: (
+		min: null,
+		max: 385px
+	),
+	mobile: (
+		min: null,
+		max: 768px
+	),
+	tablet: (
+		min: 769px,
+		max: 1023px
+	),
+	desktop: (
+		min: 1024px,
+		max: null
+	)
+);
+
+$colors: (
+	// 'primary': #730c02,
+	// 'accent': #d9753b
+	'primary': #7710e5,
+	'accent': #eefd49
+);
+
+$_font-family-heading: 'Anton', 'Anton Fallback: Arial', 'Anton: Roboto',
+	'display';
+
+$_font-family-body: 'Inter', 'Inter Fallback: Arial', 'Inter Fallback: Roboto',
+	'sans-serif';
+
+@mixin breakpoint($values...) {
+	@each $value in $values {
+		$breakpoint: map.get($_breakpoints, $value);
+		$min: map.get($breakpoint, min);
+		$max: map.get($breakpoint, max);
+
+		@if $min and $max {
+			@media (min-width: $min) and (max-width: $max) {
+				@content;
+			}
+		} @else if $min {
+			@media (min-width: $min) {
+				@content;
+			}
+		} @else if $max {
+			@media (max-width: $max) {
+				@content;
+			}
+		}
+	}
+}
+
+@mixin createColors() {
+	@each $name, $color in $colors {
+		@include colors.create($name, $color);
+	}
+}
+
+@mixin heading($size: 400) {
+	@if $size < 100 or $size > 900 {
+		@error "Invalid size: #{$size}. Size must be between 100 and 900.";
+	}
+
+	$font-size: 1rem;
+	@if $size < 800 {
+		$font-size: 1.625rem;
+	} @else if $size < 900 {
+		$font-size: 2.625rem;
+	} @else {
+		$font-size: 4.25rem;
+	}
+
+	$small-font-size: 1rem;
+	@if $size < 800 {
+		$small-font-size: 1rem;
+	} @else if $size < 900 {
+		$small-font-size: 1.625rem;
+	} @else {
+		$small-font-size: 2.625rem;
+	}
+
+	font-size: $font-size;
+	line-height: $font-size * 1.25;
+	font-weight: 700;
+	font-family: $_font-family-heading;
+
+	@include breakpoint('small') {
+		font-size: $small-font-size;
+	}
+}
+
+@mixin body($size: 400) {
+	@if $size < 100 or $size > 900 {
+		@error "Invalid size: #{$size}. Size must be between 100 and 900.";
+	}
+
+	$font-size: 1rem;
+	@if $size < 300 {
+		$font-size: 0.688rem;
+	} @else if $size < 400 {
+		$font-size: 0.812rem;
+	} @else if $size < 500 {
+		$font-size: $font-size;
+	} @else if $size < 600 {
+		$font-size: 1.188rem;
+	} @else if $size < 700 {
+		$font-size: 1.438rem;
+	} @else if $size < 800 {
+		$font-size: 1.75rem;
+	} @else if $size < 900 {
+		$font-size: 2.062rem;
+	} @else {
+		$font-size: 2.5rem;
+	}
+
+	$small-font-size: 1rem;
+	@if $size < 300 {
+		$small-font-size: 0.688rem;
+	} @else if $size < 400 {
+		$small-font-size: 0.812rem;
+	} @else if $size < 600 {
+		$small-font-size: $font-size;
+	} @else if $size < 700 {
+		$small-font-size: 1.188rem;
+	} @else if $size < 800 {
+		$small-font-size: 1.438rem;
+	} @else if $size < 900 {
+		$small-font-size: 1.75rem;
+	} @else {
+		$small-font-size: 1.75rem;
+	}
+
+	font-size: $font-size;
+	line-height: $font-size * 1.25;
+	font-weight: 400;
+	font-family: $_font-family-body;
+	@include breakpoint('small') {
+		font-size: $small-font-size;
+	}
+}

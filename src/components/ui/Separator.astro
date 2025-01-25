@@ -1,0 +1,26 @@
+---
+// images
+import separator from '@assets/wavy-separator.svg?raw'
+
+const { class: classes, position, ...props } = Astro.props
+
+let classList = ['separator', 'columns-edge', classes]
+
+// if position is top, add top class, otherwise add bottom class
+classList.push(position === 'top' ? 'top' : 'bottom')
+---
+
+<style lang='scss'>
+	$vertical-offset: 0.1em;
+	.separator {
+		transform: translateY($vertical-offset);
+	}
+
+	.top {
+		transform: rotate(180deg) translateY(-$vertical-offset);
+	}
+</style>
+
+<div class:list={classList} {...props}>
+	<Fragment set:html={separator} />
+</div>

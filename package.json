@@ -1,0 +1,26 @@
+{
+	"name": "",
+	"type": "module",
+	"version": "0.0.1",
+	"workspaces": [
+		"integrations/font-fallbacks",
+		"integrations/motion"
+	],
+	"scripts": {
+		"dev": "astro dev",
+		"build": "astro build",
+		"preview": "astro preview",
+		"astro": "astro"
+	},
+	"dependencies": {
+		"@astrojs/mdx": "^4.0.7",
+		"@astrojs/sitemap": "^3.2.1",
+		"@fontsource/anton": "^5.1.1",
+		"@fontsource/inter": "^5.1.1",
+		"@iconify-json/fluent": "^1.2.12",
+		"astro": "^5.1.8",
+		"astro-icon": "^1.1.5",
+		"astro-seo": "^0.8.4",
+		"sass": "^1.83.4"
+	}
+}

@@ -1,0 +1,5 @@
+@use '@styles/colors';
+
+:root {
+	--hero-padding: calc(var(--global-gap) * 2);
+}

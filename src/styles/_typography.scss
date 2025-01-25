@@ -1,0 +1,40 @@
+@use 'mixins';
+@use 'colors';
+
+// TYPOGRAPHY
+:root {
+	font-size: 16px;
+	@include mixins.breakpoint('small') {
+		font-size: 14px;
+	}
+	@include mixins.breakpoint('tiny') {
+		font-size: 12px;
+	}
+}
+
+body {
+	@include mixins.body(400);
+}
+
+h1,
+.h1 {
+	@include mixins.heading(900);
+	color: colors.get('primary', 'muted');
+}
+
+.heading,
+h2,
+.h2 {
+	@include mixins.heading(800);
+	color: colors.get('primary', 'muted');
+}
+h3,
+.h3,
+h4,
+.h4,
+h5,
+.h5,
+h6,
+.h6 {
+	@include mixins.heading(700);
+}

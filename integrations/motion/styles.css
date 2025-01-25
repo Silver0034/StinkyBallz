@@ -1,0 +1,12 @@
+/* Prevent animations from causing scroll bars to appear */
+body {
+	overflow: clip;
+}
+
+/* Hide elements with the [data-motion] attribute until they are ready to animate */
+@media (scripting: enabled) {
+	[data-motion]:not[data-motion-stagger],
+	[data-motion][data-motion-stagger] .motion-stagger {
+		opacity: 0;
+	}
+}

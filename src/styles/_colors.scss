@@ -1,0 +1,160 @@
+@use 'sass:list';
+@use 'sass:map';
+
+$_darkest: 0.11;
+$_lightest: 0.99;
+$_contrast_aaa: 0.7;
+$_contrast_aa: 0.5;
+
+$_dynamic_threshold: 0.6;
+$_negative_infinity: -99999;
+
+$_clamp_contrast_dark_aa: clamp($_darkest + $_contrast_aa, l, 1);
+$_clamp_contrast_light_aa: clamp(0, l, $_lightest - $_contrast_aa);
+$_clamp_contrast_dark_aaa: clamp($_darkest + $_contrast_aaa, l, 1);
+$_clamp_contrast_light_aaa: clamp(0, l, $_lightest - $_contrast_aaa);
+
+$_clamp_background_dark: clamp($_darkest + 0.2, l, 1);
+$_clamp_background_light: clamp(0, l, $_lightest);
+
+$_clamp_hue_red: clamp(20, h, 60);
+$_clamp_hue_green: clamp(150, h, 180);
+$_clamp_hue_blue: clamp(190, h, 250);
+
+$_chroma_muted: 0.05;
+
+$_chroma_background: 0.01;
+
+@function _validateColorMode($colorMode) {
+	// If color mode is not light or dark, throw an error
+	@if not list.index(light dark, $colorMode) {
+		@error "Invalid color mode: #{$colorMode}. Must be 'light' or 'dark'.";
+	}
+
+	@return $colorMode;
+}
+
+@function _colorFunctions($inputColor) {
+	@return (
+		default: (
+			light: #{$inputColor},
+			dark: #{$inputColor}
+		),
+		background: (
+			light: oklch(from $inputColor $_lightest $_chroma_background h),
+			dark: oklch(from $inputColor $_darkest $_chroma_background h)
+		),
+		foreground: (
+			light: oklch(from $inputColor $_darkest $_chroma_background h),
+			dark: oklch(from $inputColor $_lightest $_chroma_background h)
+		),
+		muted: (
+			light: oklch(from $inputColor $_clamp_contrast_light_aaa c h),
+			dark: oklch(
+					from $inputColor $_clamp_contrast_dark_aaa $_chroma_muted h
+				)
+		)
+	);
+}
+
+@function _colorFunction($inputColor, $key, $colorMode) {
+	$colorMode: _validateColorMode($colorMode);
+
+	$functions: map.get(_colorFunctions($inputColor), $key);
+
+	@return map.get($functions, $colorMode);
+}
+
+@function _colorFunctionKeys() {
+	@return map.keys(_colorFunctions(red));
+}
+
+@mixin _createColorVar($name, $inputColor, $colorFunctionKey, $colorMode) {
+	$colorMode: _validateColorMode($colorMode);
+
+	// if color function key is not in _colorFunctionKeys, throw an error
+	@if not list.index(_colorFunctionKeys(), $colorFunctionKey) {
+		@error "Invalid color function key: #{$colorFunctionKey}. Must be one of #{_colorFunctionKeys()}.";
+	}
+
+	$color: _colorFunction($inputColor, $colorFunctionKey, $colorMode);
+
+	@if $colorFunctionKey == 'default' {
+		--color-#{$name}: #{$color};
+	} @else {
+		--color-#{$name}-#{$colorFunctionKey}: #{$color};
+	}
+}
+
+@mixin _createColorVars($name, $inputColor, $colorMode) {
+	$colorMode: _validateColorMode($colorMode);
+
+	@each $key in _colorFunctionKeys() {
+		@include _createColorVar($name, $inputColor, $key, $colorMode);
+	}
+}
+
+@mixin _dynamic_threshold($defaultColor, $colorMode) {
+	@if not list.index(light dark, $colorMode) {
+		@error "Invalid color mode: #{$colorMode}. Must be 'light' or 'dark'.";
+	}
+
+	@each $type, $colorModes in $_color_transforms {
+		$transforms: map.get($colorModes, $colorMode);
+		$color: oklch(from #{$defaultColor} #{$transforms});
+
+		--color-#{$type}: #{$color};
+	}
+
+	@each $type, $states in $_color_transforms {
+		@each $state, $colorModes in $states {
+			$transforms: map.get($colorModes, $colorMode);
+			$color: oklch(from #{$defaultColor} #{$transforms});
+
+			@if $state == 'default' {
+				--color-#{$type}: #{$color};
+			} @else {
+				--color-#{$type}-#{$state}: #{$color};
+			}
+		}
+	}
+}
+
+@mixin create($name, $color) {
+	:root,
+	.light,
+	[data-theme='light'] {
+		@include _createColorVars($name, $color, 'light');
+	}
+
+	.dark,
+	[data-theme='dark'] {
+		@include _createColorVars($name, $color, 'dark');
+	}
+}
+
+@function get($name, $colorFunctionKey: 'default') {
+	// If color function key is not in _colorFunctionKeys, throw an error
+	@if not list.index(_colorFunctionKeys(), $colorFunctionKey) {
+		@error "Invalid color function key: #{$colorFunctionKey}. Must be one of #{_colorFunctionKeys()}.";
+	}
+
+	@if $colorFunctionKey != 'default' {
+		@return var(--color-#{$name}-#{$colorFunctionKey});
+	}
+
+	@return var(--color-#{$name});
+}
+
+// Return black or white, depending on the luminance of the passed color
+@function dynamic($backgroundColor) {
+	@return oklch(
+		from #{$backgroundColor}
+			clamp(
+				$_darkest,
+				calc((l - $_dynamic_threshold) * $_negative_infinity),
+				$_lightest
+			)
+			$_chroma_background h
+	);
+}

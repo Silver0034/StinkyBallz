@@ -1,0 +1,40 @@
+@use 'reset';
+@use 'colors';
+@use 'global-vars';
+@use 'mixins';
+@use 'ui';
+@use 'typography';
+@use 'layout';
+
+.screen-reader-text {
+	position: absolute;
+	clip: rect(1px, 1px, 1px, 1px);
+	padding: 0;
+	border: 0;
+	height: 1px;
+	width: 1px;
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+img {
+	height: auto;
+	max-width: 100%;
+}
+
+// COLORS
+@include mixins.createColors();
+body {
+	color: colors.get('primary', 'foreground');
+	background-color: colors.get('primary', 'background');
+}
+.dark,
+[data-theme='dark'],
+.light,
+[data-theme='light'] {
+	color: colors.get('primary', 'foreground');
+}
+
+main > section {
+	padding-block: var(--global-gap);
+}

@@ -1,0 +1,43 @@
+---
+import { Button, Hero, Partners } from '@components/ui'
+import { Picture } from 'astro:assets'
+import Layout from '../layouts/Base.astro'
+import heroBackgroundImage from '@assets/placeholder-hero.png'
+import heroImage from '@assets/placeholder-default.png'
+import logoImage from '@assets/placeholder-default.png'
+
+const title = 'Home',
+	description =
+		'Astro Launchpad is a template for Astro JS that is customized with components and styles to help get started quickly.'
+
+const heroBackgroundImageAlt = 'A placeholder image.'
+const heroImageAlt = 'A placeholder image.'
+const logoAlt = 'A placeholder image.'
+---
+
+<Layout description={description} title={title}>
+	<Hero src={heroBackgroundImage} alt={heroBackgroundImageAlt}>
+		<div>
+			<h1 class='motion-stagger'>Hero Title</h1>
+			<p class='motion-stagger'>A brief tagline or description.</p>
+			<Button text='Get Started' value='#' class='motion-stagger' />
+		</div>
+		<div>
+			<Picture
+				src={heroImage}
+				alt={heroImageAlt}
+				class='motion-stagger'
+				formats={['avif', 'webp', 'jpg']}
+				width='240'
+				loading='eager'
+			/>
+		</div>
+	</Hero>
+	<Partners>
+		<h2 style={{ textAlign: 'center' }}>Our Partners</h2>
+		<p style={{ textAlign: 'center' }}>
+			Our valued clients trust us to deliver exceptional results and
+			innovative solutions tailored to their unique needs.
+		</p>
+	</Partners>
+</Layout>
