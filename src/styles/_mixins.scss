@@ -27,15 +27,15 @@ $_breakpoints: (
 $colors: (
 	// 'primary': #730c02,
 	// 'accent': #d9753b
-	'primary': #7710e5,
-	'accent': #eefd49
+	'primary': #d1ef53,
+	'accent': #8c53ef
 );
 
-$_font-family-heading: 'Anton', 'Anton Fallback: Arial', 'Anton: Roboto',
-	'display';
+$_font-family-heading: 'Lilita One', 'Lilita One Fallback: Arial',
+	'Lilita One: Roboto', 'display';
 
-$_font-family-body: 'Inter', 'Inter Fallback: Arial', 'Inter Fallback: Roboto',
-	'sans-serif';
+$_font-family-body: 'Gabarito', 'Gabarito Fallback: Arial',
+	'Gabarito Fallback: Roboto', 'sans-serif';
 
 @mixin breakpoint($values...) {
 	@each $value in $values {
@@ -92,6 +92,8 @@ $_font-family-body: 'Inter', 'Inter Fallback: Arial', 'Inter Fallback: Roboto',
 	line-height: $font-size * 1.25;
 	font-weight: 700;
 	font-family: $_font-family-heading;
+	text-transform: uppercase;
+	
 
 	@include breakpoint('small') {
 		font-size: $small-font-size;

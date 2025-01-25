@@ -1,43 +1,62 @@
 ---
-import { Button, Hero, Partners } from '@components/ui'
-import { Picture } from 'astro:assets'
+import MarqueeText from '@components/MarqueeText.astro'
 import Layout from '../layouts/Base.astro'
-import heroBackgroundImage from '@assets/placeholder-hero.png'
-import heroImage from '@assets/placeholder-default.png'
-import logoImage from '@assets/placeholder-default.png'
+import { Picture } from 'astro:assets'
 
-const title = 'Home',
+import dude from '@assets/special-dude.png'
+import footer from '@assets/footer.png'
+
+const title = 'Stinky Ballz, Just For You',
 	description =
-		'Astro Launchpad is a template for Astro JS that is customized with components and styles to help get started quickly.'
-
-const heroBackgroundImageAlt = 'A placeholder image.'
-const heroImageAlt = 'A placeholder image.'
-const logoAlt = 'A placeholder image.'
+		'The site made just for stinky ballz lovers. The stinkier the better!'
 ---
 
+<style is:global>
+	body {
+		overflow: hidden;
+	}
+	#content {
+		grid-template-rows: min-content min-content auto;
+		min-height: 100vh;
+	}
+	footer {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+	}
+</style>
+
 <Layout description={description} title={title}>
-	<Hero src={heroBackgroundImage} alt={heroBackgroundImageAlt}>
-		<div>
-			<h1 class='motion-stagger'>Hero Title</h1>
-			<p class='motion-stagger'>A brief tagline or description.</p>
-			<Button text='Get Started' value='#' class='motion-stagger' />
-		</div>
-		<div>
+	<MarqueeText text='Dripping down my stinky balls' />
+	<section style={{ textAlign: 'center', paddingBlock: '4em' }}>
+		<h1 class='h2'>Extra Stinky</h1>
+		<p>Just for the birthday boy!</p>
+		<div
+			style={{
+				backgroundColor: 'var(--color-accent)',
+				borderRadius: '2em',
+				padding: '1em',
+				marginBlockStart: '1em'
+			}}
+		>
+			<p class='h2' style={{ textAlign: 'right', marginInline: '1rem' }}>
+				Pee-Yew!
+			</p>
 			<Picture
-				src={heroImage}
-				alt={heroImageAlt}
-				class='motion-stagger'
-				formats={['avif', 'webp', 'jpg']}
-				width='240'
-				loading='eager'
+				src={dude}
+				alt='Special Dude'
+				formats={['avif', 'webp', 'png']}
+				width='150'
 			/>
 		</div>
-	</Hero>
-	<Partners>
-		<h2 style={{ textAlign: 'center' }}>Our Partners</h2>
-		<p style={{ textAlign: 'center' }}>
-			Our valued clients trust us to deliver exceptional results and
-			innovative solutions tailored to their unique needs.
-		</p>
-	</Partners>
+	</section>
+	<footer style={{ gridColumn: '1 / -1' }}>
+		<Picture
+			src={footer}
+			alt='Brody in a ball pit with a big smile'
+			formats={['avif', 'webp', 'png']}
+			style={{ width: '100%' }}
+		/>
+	</footer>
 </Layout>

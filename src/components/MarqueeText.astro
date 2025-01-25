@@ -1,0 +1,41 @@
+---
+const { text } = Astro.props
+
+const numberOfRepeat = 12
+
+const marqueeText = `${text} - `.repeat(numberOfRepeat)
+---
+
+<style>
+	.marquee {
+		margin: 0 auto;
+		white-space: nowrap;
+		overflow: hidden;
+		position: absolute;
+		grid-column: 1 / -1;
+		color: var(--color-primary);
+		width: 100vw;
+	}
+
+	.marquee span {
+		display: inline-block;
+		animation: marquee 80s linear infinite;
+	}
+
+	.marquee2 span {
+		animation-delay: 2.5s;
+	}
+
+	@keyframes marquee {
+		0% {
+			transform: translate(0%, 0);
+		}
+		100% {
+			transform: translate(-75%, 0);
+		}
+	}
+</style>
+
+<p class='marquee h3'>
+	<span>{marqueeText}</span>
+</p>

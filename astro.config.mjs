@@ -11,19 +11,10 @@ import icon from 'astro-icon'
 export default defineConfig({
 	integrations: [
 		fontFallbacks({
-			Anton: '@fontsource/anton/files/anton-latin-400-normal.woff2',
-			Inter: [
-				{
-					src: '@fontsource/inter/files/inter-latin-400-normal.woff2',
-					fontWeight: 400,
-					fontStyle: 'normal'
-				},
-				{
-					src: '@fontsource/inter/files/inter-latin-700-normal.woff2',
-					fontWeight: 700,
-					fontStyle: 'normal'
-				}
-			]
+			Gabarito:
+				'@fontsource/gabarito/files/gabarito-latin-400-normal.woff2',
+			'Lilita One':
+				'@fontsource/lilita-one/files/lilita-one-latin-400-normal.woff2'
 		}),
 		sitemap(),
 		mdx(),

@@ -15,8 +15,8 @@
 	"dependencies": {
 		"@astrojs/mdx": "^4.0.7",
 		"@astrojs/sitemap": "^3.2.1",
-		"@fontsource/anton": "^5.1.1",
-		"@fontsource/inter": "^5.1.1",
+		"@fontsource/lilita-one": "^5.1.1",
+		"@fontsource/gabarito": "^5.1.1",
 		"@iconify-json/fluent": "^1.2.12",
 		"astro": "^5.1.8",
 		"astro-icon": "^1.1.5",

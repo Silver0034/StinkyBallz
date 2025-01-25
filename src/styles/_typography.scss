@@ -19,14 +19,14 @@ body {
 h1,
 .h1 {
 	@include mixins.heading(900);
-	color: colors.get('primary', 'muted');
+	color: colors.get('primary', 'foreground');
 }
 
 .heading,
 h2,
 .h2 {
 	@include mixins.heading(800);
-	color: colors.get('primary', 'muted');
+	color: colors.get('primary', 'foreground');
 }
 h3,
 .h3,

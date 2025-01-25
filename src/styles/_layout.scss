@@ -55,7 +55,7 @@ body {
 		} @else if $fraction == full {
 			grid-column: 2 / -2;
 		} @else {
-			grid-column: span math.div(#{$column-count}, $divisor);
+			grid-column: span math.div($column-count, $divisor);
 		}
 	}
 }
@@ -68,7 +68,7 @@ body {
 			} @else if $fraction == full {
 				grid-column: 2 / -2;
 			} @else {
-				grid-column: span math.div(#{$column-count}, $divisor);
+				grid-column: span math.div($column-count, $divisor);
 			}
 		}
 	}
@@ -82,7 +82,7 @@ body {
 			} @else if $fraction == full {
 				grid-column: 2 / -2;
 			} @else {
-				grid-column: span math.div(#{$column-count}, $divisor);
+				grid-column: span math.div($column-count, $divisor);
 			}
 		}
 	}
